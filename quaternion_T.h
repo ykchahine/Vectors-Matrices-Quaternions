@@ -23,9 +23,9 @@ public:
   quaternion(T w_=T(), T x_=T(), T y_=T(), T z_=T())
   : w(w_), x(x_), y(y_), z(z_) { }
 
-  static quaternion i() { return {1, 0, 0}; }
-  static quaternion j() { return {0, 1, 0}; }
-  static quaternion k() { return {0, 0, 1}; }
+  static quaternion i() { return (0, 1, 0, 0); }
+  static quaternion j() { return (0, 0, 1, 0); }
+  static quaternion k() { return (0, 0, 0, 1); }
 
   static double ii() {return -1;}
   static double jj() {return -1;}
@@ -43,37 +43,43 @@ public:
   friend quaternion operator+(const quaternion& a, const quaternion& b){
      //w + i*x + j*y + k*z + 
      
-     return quaternion((a.w + b.w) + (a.x + b.x) + (a.y + b.y) + (a.z + b.z));
+     return quaternion( (a.w + b.w), (a.x + b.x), (a.y + b.y), (a.z + b.z) );
 
   }
   friend quaternion operator-(const quaternion& a, const quaternion& b){
-     return quaternion((a.w - b.w) - (a.x - b.x) - (a.y - b.y) + (a.z - b.z));
+     
+     return quaternion( (a.w - b.w), (a.x - b.x), (a.y - b.y), (a.z - b.z) );
 
   }
-  friend quaternion operator*(const quaternion& a, const quaternion& b) {
-    
-    (a.w*b.w) - (a.x*b.x + a.y*b.y + a.z*b.z) + a.w(q1i + q2j + q3k) + q0(p1i + p2j + p3k) +
-    (p2q3 − p3q2)i + (p3q1 − p1q3)j + (p1q2 − p2q1)k.
-  }
+  friend quaternion operator*(const quaternion& a, const quaternion& b); //{
+    //(a + i b + j c + k d)*(e + i f + j g + k h)
+    //return quaternion( {  } );
+  //}
 
   friend quaternion operator+(const quaternion& q, T k);
   friend quaternion operator+(T k, const quaternion& q);
 
 
   friend quaternion operator-(const quaternion& q, T k);
-  friend quaternion operator-(T k, const quaternion& q);
+  friend quaternion operator-(T k, const quaternion& q); //return -(q-k)
 
-  friend quaternion operator*(const quaternion& q, T k);
-  friend quaternion operator*(T k, const quaternion& q);
+  friend quaternion operator*(const quaternion& q, T k); //4 * (1,2,3,4)
+  friend quaternion operator*(T k, const quaternion& q); //return q * k
   friend quaternion operator/(const quaternion& q, T k);
 
 
-  quaternion operator-() const;
+  quaternion operator-() const{
+    return quaternion(-w, -x, -y, -z);
+  } //make everything negative
 
-  friend bool operator==(const quaternion& q, const quaternion& r);
-  friend bool operator!=(const quaternion& q, const quaternion& r);
-  vector3d<T> vector() const;
-  T scalar() const;
+  friend bool operator==(const quaternion& q, const quaternion& r){
+    return (q.w == r.w && q.x == r.x &&)
+  }
+  friend bool operator!=(const quaternion& q, const quaternion& r) {return ! (q == r);}
+  
+  vector3d<T> vector() const {return vector3d<T>("quat", 3, {x, y, z});}
+  
+  T scalar() const {return w;}
 
   quaternion unit_scalar() const;
 
