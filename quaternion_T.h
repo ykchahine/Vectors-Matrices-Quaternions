@@ -51,29 +51,40 @@ public:
      return quaternion( (a.w - b.w), (a.x - b.x), (a.y - b.y), (a.z - b.z) );
 
   }
-  friend quaternion operator*(const quaternion& a, const quaternion& b); //{
-    //(a + i b + j c + k d)*(e + i f + j g + k h)
-    //return quaternion( {  } );
-  //}
+  friend quaternion operator*(const quaternion& a, const quaternion& b) {
+     return quaternion((a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z),
+                              (a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y),
+                              (a.w * b.y + a.y * b.w + a.z * b.x - a.x * b.z),
+                              (a.w * b.z + a.z * b.w + a.x * b.y - a.y * b.w));
+  }
+  friend quaternion operator+(const quaternion& q, T k){
+    return quaternion( (q.w + k), (q.x + k), (q.y + k), (q.z + k) );
+  }
+  friend quaternion operator+(T k, const quaternion& q) { return(q + k); }
 
-  friend quaternion operator+(const quaternion& q, T k);
-  friend quaternion operator+(T k, const quaternion& q);
+  friend quaternion operator-(const quaternion& q, T k){
+    return quaternion( (q.w - k), (q.x - k), (q.y - k), (q.z - k) );
 
+  }
+  friend quaternion operator-(T k, const quaternion& q) { return -(q-k); }
 
-  friend quaternion operator-(const quaternion& q, T k);
-  friend quaternion operator-(T k, const quaternion& q); //return -(q-k)
-
-  friend quaternion operator*(const quaternion& q, T k); //4 * (1,2,3,4)
-  friend quaternion operator*(T k, const quaternion& q); //return q * k
-  friend quaternion operator/(const quaternion& q, T k);
-
-
-  quaternion operator-() const{
+  friend quaternion operator*(const quaternion& q, T k){
+    return quaternion( (q.w * k), (q.x * k), (q.y * k), (q.z * k) );
+  } //4 * (1,2,3,4)
+  friend quaternion operator*(T k, const quaternion& q) {return (q * k);}
+  friend quaternion operator/(const quaternion& q, T k){
+    while(k != 0) {
+    return quaternion( (q.w / k), (q.x / k), (q.y / k), (q.z / k) );
+  }
+  
+  }
+  
+  friend quaternion operator-() const{
     return quaternion(-w, -x, -y, -z);
   } //make everything negative
 
   friend bool operator==(const quaternion& q, const quaternion& r){
-    return (q.w == r.w && q.x == r.x &&)
+    return (q.w == r.w && q.x == r.x && q.y == r.y && q.z == r.z);
   }
   friend bool operator!=(const quaternion& q, const quaternion& r) {return ! (q == r);}
   
@@ -83,13 +94,19 @@ public:
 
   quaternion unit_scalar() const;
 
-  quaternion conjugate() const;
+  quaternion conjugate() const {
+    quaternion<T> a = *this;
+
+    return quaternion(a.w, a.-x, a.-y, a.-z); }
 
   quaternion inverse() const;
 
   quaternion unit() const;
 
-  double norm() const;
+  double norm() const { 
+    quaternion<T> a = *this;
+    return sqrt(a.w ^ 2 + a.x ^ 2 + a.y ^ 2 + a.z ^ 2); }
+  }
   double magnitude() const;
 
   double dot(const quaternion& v) const;
