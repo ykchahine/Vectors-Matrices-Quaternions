@@ -180,7 +180,7 @@ int main(int argc, const char * argv[]) {
   //test_vectors();
   //test_matrices();
   //test_matrices_and_vectors();
-  //test_quaternions();  
+  test_quaternions();  
   return 0;
 }
 

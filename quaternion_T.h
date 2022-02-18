@@ -117,27 +117,46 @@ public:
 
   double angle(const quaternion& v) const {
 
-        quaternion<T> z = conjugate() * v;
-        T zvnorm = z.vector().norm();
-        T zscalar = z.scalar();
-        double angle = atan2(zvnorm, zscalar);
-        return angle * 180.0 / 3.1415;
+    quaternion<T> z = conjugate() * v;
+    T zvnorm = z.vector().norm();
+    T zscalar = z.scalar();
+    double angle = atan2(zvnorm, zscalar);
+    return angle * 180.0 / 3.1415;
 
   }
 
-  matrix3d<T> rot_matrix() const{
+  matrix3d<T> rot_matrix() const {
+    quaternion<T> v = *this;
+    T w = v.w;
+    T x = v.x;
+    T y = v.y;
+    T z = v.z;
     
-     T w = w;
-     T x = x;
-     T y = y;
-     T z = z;
-     return matrix3d<T>("mat", 3, { -2*(y*y + z*z) + 1,  2*(x*y  - w*z), 2*(x*z  +  w*y),
-                             2*(x*y  + w*z),      -2*(x*x + z*z) + 1,  2*(y*z  -  w*x),
-                             2*(x*z  - w*y),       2*(y*z  + w*x),      -2*(x*x + y*y)+1) };
-  }
+    T first = -2*(y*y + z*z) + 1;
+    T second = 2*(x*y - w*z);
+    T third = 2*(x*z + w*y);
+    T fourth = 2*(x*y + w*z);
+    T fifth = -2*(x*x + z*z) + 1;
+    T sixth = 2*(y*z - w*x);
+    T seventh = 2*(x*z  - w*y);
+    T eighth = 2*(y*z  + w*x);
+    T ninth =  -2*(x*x + y*y) + 1;
+
+    matrix3d<T> a("a", 3, {first, second, third,   fourth, fifth, sixth,   seventh, eighth, ninth});
+
+    return a;
+  } 
 
  // rotates point pt (pt.x, pt.y, pt.z) about (axis.x, axis.y, axis.z) by theta
- static vec3 rotate(const vector3D& pt, const vector3D& axis, double theta);
+ static vec3 rotate(const vector3d<T>& pt, const vector3d<T>& axis, double theta){
+    double costheta2 = cos(theta / 2.0);
+    double sintheta2 = sin(theta / 2.0);
+    quaternion<T> q = quaternion(costheta2, axis.x * sintheta2, axis.y * sintheta2, axis.z * sintheta2);
+    quaternion q_star = quaternion(q.w, -q.x, -q.y, -q.z);
+    quaternion<T> p = quaternion(0, pt.x, pt.y, pt.z);
+    vector3d<T> p_rot = q * p * q_star;
+    return vector3d<T>(p_rot.x, p_rot.y, p_rot.z);
+ }
 
  friend std::ostream& operator<<(std::ostream& os, const quaternion& q) {
    os << "Quat(";
