@@ -92,13 +92,13 @@ public:
   
   T scalar() {return w;}
 
-  quaternion unit_scalar() const;
+  quaternion unit_scalar() const { return quaternion(1.0, vector()); }
 
-  quaternion conjugate()  { return quaternion(w, -x, -y, -z); }
+  quaternion conjugate() const { return quaternion(w, -x, -y, -z); }
 
   quaternion inverse() { return conjugate() / (magnitude() * magnitude()); }
 
-  quaternion unit() const;
+  quaternion unit() const { return quaternion() / magnitude(); }
 
   double norm() const { 
     quaternion<T> a = *this;
@@ -109,11 +109,32 @@ public:
     return a.norm(); 
   }
 
-  double dot(const quaternion& v) const;
+  double dot(const quaternion& v) const{
 
-  double angle(const quaternion& v) const;
+    return w * v.w + vector().dot(v.vector());
 
-  matrix3d<T> rot_matrix() const;
+  }
+
+  double angle(const quaternion& v) const {
+
+        quaternion<T> z = conjugate() * v;
+        T zvnorm = z.vector().norm();
+        T zscalar = z.scalar();
+        double angle = atan2(zvnorm, zscalar);
+        return angle * 180.0 / 3.1415;
+
+  }
+
+  matrix3d<T> rot_matrix() const{
+    
+     T w = w;
+     T x = x;
+     T y = y;
+     T z = z;
+     return matrix3d<T>("mat", 3, { -2*(y*y + z*z) + 1,  2*(x*y  - w*z), 2*(x*z  +  w*y),
+                             2*(x*y  + w*z),      -2*(x*x + z*z) + 1,  2*(y*z  -  w*x),
+                             2*(x*z  - w*y),       2*(y*z  + w*x),      -2*(x*x + y*y)+1) };
+  }
 
  // rotates point pt (pt.x, pt.y, pt.z) about (axis.x, axis.y, axis.z) by theta
  static vec3 rotate(const vector3D& pt, const vector3D& axis, double theta);
