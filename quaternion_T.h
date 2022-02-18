@@ -71,21 +71,15 @@ public:
   friend quaternion operator*(const quaternion& q, T k){
     return quaternion( (q.w * k), (q.x * k), (q.y * k), (q.z * k) );
   } //4 * (1,2,3,4)
-  friend quaternion operator*(T k, const quaternion& q) {return (q * k);}
-  friend quaternion operator/(const quaternion& q, T k){
-    while(k != 0) {
-    return quaternion( (q.w / k), (q.x / k), (q.y / k), (q.z / k) );
-  }
-  
-  }
+  friend quaternion operator*(T k, const quaternion& q) { return (q * k); }
+  friend quaternion operator/(const quaternion& q, T k) { return quaternion( (q.w / k), (q.x / k), (q.y / k), (q.z / k) ); }
+                                                                                                                                                  
   
    quaternion operator-() const {
     return quaternion(-w, -x, -y, -z);
   } //make everything negative
 
-  friend bool operator==(const quaternion& q, const quaternion& r){
-    return (q.w == r.w && q.x == r.x && q.y == r.y && q.z == r.z);
-  }
+  friend bool operator==(const quaternion& q, const quaternion& r) { return (q.w == r.w && q.x == r.x && q.y == r.y && q.z == r.z); }
   friend bool operator!=(const quaternion& q, const quaternion& r) {return ! (q == r);}
   
   vector3d<T> vector() const {return vector3d<T>("quat", 3, {x, y, z});}

@@ -172,7 +172,7 @@ void test_matrices_and_vectors() {
 void test_quaternions() {
     print("\n====================  TESTING QUATERNIONS  ========================");
     quaternion<double>::run_tests();
-    print("...test_matrices_and_vectors assertions passed");
+    print("...test quaternions assertions passed");
     print("====================  FINISHED testing quaternions  ========================");
 }
 
