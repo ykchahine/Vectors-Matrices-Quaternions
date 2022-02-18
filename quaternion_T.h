@@ -79,7 +79,7 @@ public:
   
   }
   
-  friend quaternion operator-() const{
+   quaternion operator-() const {
     return quaternion(-w, -x, -y, -z);
   } //make everything negative
 
@@ -90,24 +90,24 @@ public:
   
   vector3d<T> vector() const {return vector3d<T>("quat", 3, {x, y, z});}
   
-  T scalar() const {return w;}
+  T scalar() {return w;}
 
   quaternion unit_scalar() const;
 
-  quaternion conjugate() const {
-    quaternion<T> a = *this;
+  quaternion conjugate()  { return quaternion(w, -x, -y, -z); }
 
-    return quaternion(a.w, a.-x, a.-y, a.-z); }
-
-  quaternion inverse() const;
+  quaternion inverse() { return conjugate() / (magnitude() * magnitude()); }
 
   quaternion unit() const;
 
   double norm() const { 
     quaternion<T> a = *this;
-    return sqrt(a.w ^ 2 + a.x ^ 2 + a.y ^ 2 + a.z ^ 2); }
+    return sqrt((a.w * a.w)  + (a.x * a.x) + (a.y * a.y) + (a.z * a.z));
   }
-  double magnitude() const;
+  double magnitude() const {
+    quaternion<T> a = *this;
+    return a.norm(); 
+  }
 
   double dot(const quaternion& v) const;
 
