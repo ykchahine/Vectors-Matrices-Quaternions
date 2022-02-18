@@ -183,5 +183,3 @@ int main(int argc, const char * argv[]) {
   test_quaternions();  
   return 0;
 }
-
-
