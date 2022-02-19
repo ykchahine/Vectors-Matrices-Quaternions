@@ -23,9 +23,9 @@ public:
   quaternion(T w_=T(), T x_=T(), T y_=T(), T z_=T())
   : w(w_), x(x_), y(y_), z(z_) { }
 
-  static quaternion i() { return (0, 1, 0, 0); }
-  static quaternion j() { return (0, 0, 1, 0); }
-  static quaternion k() { return (0, 0, 0, 1); }
+  static quaternion i() { return quaternion(0, 1, 0, 0); }
+  static quaternion j() { return quaternion(0, 0, 1, 0); }
+  static quaternion k() { return quaternion(0, 0, 0, 1); }
 
   static double ii() {return -1;}
   static double jj() {return -1;}
